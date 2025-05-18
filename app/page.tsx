@@ -26,7 +26,7 @@ export default function DeleteAccount() {
       } else {
         setMessage({ type: 'error', text: data.error || 'Failed to delete account.' });
       }
-    } catch (err) {
+    } catch (error) {
       setMessage({ type: 'error', text: 'An unexpected error occurred.' });
     } finally {
       setIsLoading(false);

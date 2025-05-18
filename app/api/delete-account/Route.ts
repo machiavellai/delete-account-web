@@ -38,7 +38,7 @@ export async function POST(request: Request) {
         await supabase.from('users').delete().eq('id', user.id);
 
         return NextResponse.json({ success: true }, { status: 200 });
-    } catch (err) {
+    } catch (error) {
         return NextResponse.json({ error: 'An error occurred' }, { status: 500 });
     }
 }
