@@ -19,13 +19,13 @@ export async function POST(request: Request) {
     }
 
     try {
-        const { data: user, error: fetchError } = await supabase
-            .from('auth.users')
-            .select('id')
-            .eq('email', email)
-            .single();
+        const { data: users, error: fetchError } = await supabase.auth.admin.listUsers();
+        if (fetchError) {
+            return NextResponse.json({ error: fetchError.message }, { status: 500 });
+        }
 
-        if (fetchError || !user) {
+        const user = users.users.find((u) => u.email === email);
+        if (!user) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
 
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
         }
 
         await supabase.from('subscriptions').delete().eq('user_id', user.id);
-        await supabase.from('profiles').delete().eq('id', user.id);
+        await supabase.from('users').delete().eq('id', user.id);
 
         return NextResponse.json({ success: true }, { status: 200 });
     } catch (err) {
